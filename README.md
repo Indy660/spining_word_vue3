@@ -1,24 +1,7 @@
-# spining_word_vue3
+## [Ссылка на проект](https://indy660.github.io/spinning_word_vue/) 
 
-## Project setup
-```
-npm install
-```
+#### Переработка с чистого scss (https://codepen.io/indy660/pen/WNoLQbP) на vue с настраиваемыми свойствами
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+![](/src/assets/Screenshot_2.png)
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![](/src/assets/Screenshot_1.png)

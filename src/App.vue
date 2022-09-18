@@ -13,7 +13,7 @@
     </template>
 
     <div class="content">
-      <template v-for="(item, key) in timesInscription" :key="key">
+      <template v-for="(item, key) in getTimesInscription" :key="key">
         <InscriptionName
             :positionX="mousePositionX"
             :positionY="mousePositionY"
@@ -31,27 +31,27 @@
           v-if="!showSidebar"
       />
     </transition>
-<!--    <Sidebar-->
-<!--        :showSidebar="showSidebar"-->
-<!--        @click.stop-->
-<!--        @mouseleave="returnDefaultIndex"-->
-<!--    />-->
+    <Sidebar
+        :showSidebar="showSidebar"
+        @click.stop
+        @mouseleave="returnDefaultIndex"
+    />
   </div>
 </template>
 
 <script>
 import CellComponent from "@/components/CellComponent";
 import InscriptionName from "@/components/InscriptionName";
-// import Sidebar from "@/components/sidebar/Sidebar";
+import Sidebar from "@/components/sidebar/Sidebar";
 import ButtonShowSidebar from "@/components/ButtonShowSidebar";
-// import { mapMutations, mapGetters } from "vuex"
-// import {URLMutationsNames, mapVuexObj, returnGettersArray, projectName} from "@/helper/helper.js"
+import { mapMutations, mapGetters } from "vuex"
+import {URLMutationsNames, mapVuexObj, returnGettersArray, projectName} from "@/helper/helper.js"
 export default {
   name: 'App',
   components: {
     CellComponent,
     InscriptionName,
-    // Sidebar,
+    Sidebar,
     ButtonShowSidebar,
   },
   data() {
@@ -60,34 +60,30 @@ export default {
       mousePositionY: 0,
 
       showSidebar: false,
-
-      timesInscription: 20,
-      rows: 20,
-      columns: 20,
     }
   },
   computed: {
-    // ...mapGetters(
-    //     returnGettersArray()
-    // ),
+    ...mapGetters(
+        returnGettersArray()
+    ),
     cellsAtScreen() {
-      return (this.rows * this.columns)
+      return (this.getRows * this.getColumns)
     },
     mainGridStyle() {
       return {
-        gridTemplate: `repeat(${this.rows}, 1fr) / repeat(${this.columns}, 1fr)`
+        gridTemplate: `repeat(${this.getRows}, 1fr) / repeat(${this.getColumns}, 1fr)`
       }
     },
     basicPositionX() {
-      return Math.ceil(this.columns / 2)
+      return Math.ceil(this.getColumns / 2)
     },
     basicPositionY() {
-      return Math.ceil(this.rows / 2)
+      return Math.ceil(this.getRows / 2)
     },
   },
   mounted() {
     this.returnDefaultIndex()
-    // this.updateStateByUrl()
+    this.updateStateByUrl()
   },
   methods: {
     // ...mapMutations({
@@ -96,12 +92,12 @@ export default {
     //   time_rows: 'setRowsNumber',
     //   time_columns: 'setColumnsNumber',
     // }),
-    // ...mapMutations(
-    //     mapVuexObj(URLMutationsNames, 'mutation')
-    // ),
+    ...mapMutations(
+        mapVuexObj(URLMutationsNames, 'mutation')
+    ),
     changeIndex(cellIndex) {
-      this.mousePositionX = cellIndex > this.columns ? cellIndex % this.columns  === 0 ? this.columns : (cellIndex % this.columns) : cellIndex
-      this.mousePositionY = cellIndex > this.columns ? Math.ceil(cellIndex / this.columns) : 1;
+      this.mousePositionX = cellIndex > this.getColumns ? cellIndex % this.getColumns  === 0 ? this.getColumns : (cellIndex % this.getColumns) : cellIndex
+      this.mousePositionY = cellIndex > this.getColumns ? Math.ceil(cellIndex / this.getColumns) : 1;
       // console.log(this.mousePositionX,  this.mousePositionY)
     },
     returnDefaultIndex() {
@@ -111,33 +107,33 @@ export default {
     showSidebarFunc(bool) {
       this.showSidebar = bool;
     },
-    // updateStateByUrl() {
-    //   let queryString = location.href.replace(location.origin, '').substring(1)
-    //   console.log('queryString', queryString)
-    //   if (queryString.indexOf(projectName) >= 0) {
-    //     queryString = queryString.replace(projectName, '')
-    //     queryString = queryString.substring(1)
-    //   }
-    //   if (queryString.length > 1) {
-    //     const path = queryString.split('&')
-    //     for (const itemPath of path) {
-    //       const indexBetween = itemPath.indexOf('=')
-    //       if (indexBetween) {
-    //         const keyPath = itemPath.substring(0, indexBetween)
-    //         let valuePath = itemPath.substring(indexBetween + 1)
-    //         if (parseInt(valuePath)) {
-    //           valuePath = parseInt(valuePath)
-    //         }
-    //         console.log(keyPath, valuePath)
-    //         // for (const item of URLMutationsNames) {
-    //         if (this[keyPath]) {
-    //           this[keyPath](valuePath)
-    //         }
-    //         // }
-    //       }
-    //     }
-    //   }
-    // }
+    updateStateByUrl() {
+      let queryString = location.href.replace(location.origin, '').substring(1)
+      console.log('queryString', queryString)
+      if (queryString.indexOf(projectName) >= 0) {
+        queryString = queryString.replace(projectName, '')
+        queryString = queryString.substring(1)
+      }
+      if (queryString.length > 1) {
+        const path = queryString.split('&')
+        for (const itemPath of path) {
+          const indexBetween = itemPath.indexOf('=')
+          if (indexBetween) {
+            const keyPath = itemPath.substring(0, indexBetween)
+            let valuePath = itemPath.substring(indexBetween + 1)
+            if (parseInt(valuePath)) {
+              valuePath = parseInt(valuePath)
+            }
+            console.log(keyPath, valuePath)
+            // for (const item of URLMutationsNames) {
+              if (this[keyPath]) {
+                this[keyPath](valuePath)
+              }
+            // }
+          }
+        }
+      }
+    }
   },
 }
 </script>

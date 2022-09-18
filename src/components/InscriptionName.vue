@@ -1,10 +1,10 @@
 <template>
-  <div class="name" :style="computedStyle">{{ inscription }}</div>
+  <div class="name" :style="computedStyle">{{ getInscription }}</div>
 </template>
 
 <script>
-// import { mapGetters } from "vuex"
-// import { returnGettersArray } from "@/helper/helper.js"
+import { mapGetters } from "vuex"
+import { returnGettersArray } from "@/helper/helper.js"
 export default {
   name: "InscriptionName",
   props: {
@@ -33,27 +33,16 @@ export default {
     return {
       colorInscription: 0,
       timerId: null,
-
-      inscription: 'Example',
-      timesInscription: 20,
-      hue: {
-        start: 1,
-        end: 360,
-      },
-      saturation: 100,
-      lightness: 50,
-      initialFontSize: 100,
-      speedUpdateColor: 200,
     }
   },
   computed: {
-    // ...mapGetters(
-    //     returnGettersArray()
-    // ),
+    ...mapGetters(
+        returnGettersArray()
+    ),
     computedStyle() {
       return {
-        color: `hsl(${this.colorInscription}, ${this.saturation}%, ${this.lightness}%)`,
-        fontSize: `calc(${this.initialFontSize}px + ${this.order} * 10px)`,
+        color: `hsl(${this.colorInscription}, ${this.getSaturation}%, ${this.getLightness}%)`,
+        fontSize: `calc(${this.getInitialFontSize}px + ${this.order} * 10px)`,
         animationDelay: `calc(-0.3s + ${this.order}s)`,
         opacity: `${this.opacity}`,
         transform: `
@@ -65,13 +54,13 @@ export default {
       }
     },
     stepColor() {
-      return Math.ceil((this.hue.end - this.hue.start) / this.timesInscription);
+      return Math.ceil((this.getHue.end - this.getHue.start) / this.getTimesInscription);
     },
     startColor() {
       return this.stepColor * this.order;
     },
     opacity() {
-      return (this.order + 1) / this.timesInscription
+      return (this.order + 1) / this.getTimesInscription
     },
   },
   mounted() {
@@ -82,8 +71,8 @@ export default {
     updateColor() {
       this.timerId = setInterval(() => {
       this.colorInscription = this.colorInscription + this.stepColor
-      if (this.colorInscription / this.hue.end >= 1) {
-        this.colorInscription = this.hue.start
+      if (this.colorInscription / this.getHue.end >= 1) {
+        this.colorInscription = this.getHue.start
       }
       }, this.getSpeedUpdateColor)
     },
